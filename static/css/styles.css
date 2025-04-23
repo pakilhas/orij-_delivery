@@ -1,0 +1,322 @@
+/* static/css/styles.css */
+:root {
+    /* Cores principais */
+    --vermelho: #D90429;
+    --vermelho-escuro: #B00321;
+    --preto: #0D0D0D;
+    --preto-claro: #1A1A1A;
+    --branco: #FFF9F5;
+    --cinza: #F3F3F3;
+
+    /* Transições */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset e Estilos Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--branco);
+    color: var(--preto);
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header {
+    background: var(--preto);
+    border-bottom: 3px solid var(--vermelho);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--vermelho) !important;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    opacity: 0.9;
+}
+
+.nav-link {
+    color: var(--branco) !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.5rem;
+    border-radius: 50px;
+    transition: var(--transition);
+}
+
+.nav-link.active,
+.nav-link:hover {
+    color: var(--vermelho) !important;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Conteúdo Principal */
+main {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+/* Cards de Produto */
+.card-produto {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: var(--branco);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card-produto:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    border-bottom: 3px solid var(--vermelho);
+    transition: var(--transition);
+}
+
+.card-produto:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/* Botões */
+.btn-carrinho {
+    background: var(--vermelho);
+    color: var(--branco);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-carrinho:hover {
+    background: var(--vermelho-escuro);
+    transform: translateY(-2px);
+}
+
+.btn-carrinho i {
+    font-size: 1.1em;
+}
+
+/* Observações */
+.observacao-container {
+    position: relative;
+    margin: 0.5rem 0;
+}
+
+.btn-observacao {
+    background: rgba(217, 4, 41, 0.1);
+    color: var(--vermelho);
+    border: 1px solid var(--vermelho);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    width: fit-content;
+}
+
+.btn-observacao:hover {
+    background: var(--vermelho);
+    color: var(--branco);
+}
+
+.observacao-input {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: var(--branco);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.observacao-input.active {
+    display: block;
+    animation: slideDown 0.3s ease forwards;
+}
+
+.observacao-input textarea {
+    width: 100%;
+    border: 2px solid var(--vermelho);
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: var(--transition);
+}
+
+.observacao-input textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.2);
+}
+
+/* Carrinho */
+.carrinho-item {
+    background: var(--branco);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+}
+
+.carrinho-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.quantidade-btn {
+    background: var(--branco);
+    border: 2px solid var(--vermelho);
+    color: var(--vermelho);
+    width: 35px;
+    height: 35px;
+    transition: var(--transition);
+}
+
+.quantidade-btn:hover {
+    background: var(--vermelho);
+    color: var(--branco);
+}
+
+.total-box {
+    background: var(--preto);
+    color: var(--branco);
+    padding: 2rem;
+    border-radius: 15px;
+    border: 2px solid var(--vermelho);
+}
+
+/* Footer */
+.footer {
+    background: var(--preto);
+    color: var(--branco);
+    padding: 4rem 0 2rem;
+    margin-top: auto;
+    border-top: 3px solid var(--vermelho);
+}
+
+.social-icons a {
+    color: var(--branco);
+    font-size: 1.5rem;
+    margin: 0 0.75rem;
+    transition: var(--transition);
+}
+
+.social-icons a:hover {
+    color: var(--vermelho);
+    transform: translateY(-3px);
+}
+
+/* Utilidades */
+.categoria-title {
+    color: var(--vermelho);
+    border-left: 5px solid var(--vermelho);
+    padding-left: 1rem;
+    margin: 2rem 0;
+    font-size: 1.75rem;
+}
+
+.text-vermelho {
+    color: var(--vermelho) !important;
+}
+
+.badge-carrinho {
+    background: var(--vermelho) !important;
+    font-size: 0.8em;
+}
+
+/* Animações */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .nav-link {
+        margin: 0.25rem 0;
+        text-align: center;
+    }
+
+    .card-img-top {
+        height: 150px;
+    }
+
+    .categoria-title {
+        font-size: 1.5rem;
+    }
+
+    .footer {
+        padding: 2rem 0;
+    }
+}
+
+/* ============= BOTÕES DE AÇÃO PRINCIPAL ============= */
+.btn-finalizar {
+    background: var(--vermelho) !important;
+    color: var(--branco) !important;
+    border: 2px solid var(--vermelho) !important;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.btn-finalizar:hover {
+    background: var(--vermelho-escuro) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 4, 41, 0.3);
+}
+
+/* Para o botão do carrinho vazio */
+.btn-outline-vermelho {
+    border: 2px solid var(--vermelho) !important;
+    color: var(--vermelho) !important;
+    background: transparent !important;
+    transition: var(--transition);
+}
+
+.btn-outline-vermelho:hover {
+    background: var(--vermelho) !important;
+    color: var(--branco) !important;
+    border: 2px solid var(--vermelho) !important;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+}

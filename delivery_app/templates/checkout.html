@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - OriJá{% endblock %}
+
+{% block content %}
+    <div class="checkout-container py-5">
+        <h1 class="text-center mb-5 text-vermelho">Finalizar Pedido</h1>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <form method="POST" class="checkout-form">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" name="nome" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Endereço de Entrega</label>
+                        <textarea name="endereco" class="form-control" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Telefone</label>
+                        <input type="tel" name="telefone" class="form-control" required>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <a href="/confirmacao" class="btn btn-finalizar mb-3"> <!-- Espaço abaixo -->
+                            Finalizar Compra <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        
+                        <a href="/carrinho" class="btn btn-outline-vermelho">
+                            Voltar ao Carrinho
+                        </a>
+                    </div>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

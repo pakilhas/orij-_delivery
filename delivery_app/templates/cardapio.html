@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cardápio - OriJá{% endblock %}
+
+{% block content %}
+    {% for categoria in categorias %}
+    <div class="row mb-5">
+        <h2 class="categoria-title">{{ categoria.nome }}</h2>
+        
+        {% for produto in categoria.produto_set.all %}
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card card-produto h-100">
+                {% if produto.imagem %}
+                <img src="{{ produto.imagem.url }}" class="card-img-top" alt="{{ produto.nome }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ produto.nome }}</h5>
+                    <p class="card-text text-muted">{{ produto.descricao }}</p>
+                    
+                    <div class="d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-vermelho mb-0">R$ {{ produto.preco }}</h5>
+                            <form method="POST" action="{% url 'adicionar_ao_carrinho' produto.id %}" class="w-100">
+                                {% csrf_token %}
+                                <div class="observacao-container">
+                                    <button type="button" class="btn-observacao mb-2" onclick="toggleObservacao(this)">
+                                        <i class="fas fa-edit me-1"></i>Observação
+                                    </button>
+                                    <div class="observacao-input">
+                                        <textarea name="observacao" 
+                                                placeholder="Ex: Sem cebola, maionese à parte..."
+                                                rows="2"
+                                                maxlength="100"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-carrinho w-100">
+                                    <i class="fas fa-cart-plus"></i> Adicionar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning">Nenhum produto nesta categoria</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <div class="alert alert-danger">Nenhuma categoria cadastrada</div>
+    {% endfor %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleObservacao(btn) {
+        const container = btn.closest('.observacao-container');
+        const input = container.querySelector('.observacao-input');
+        input.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.observacao-container')) {
+            document.querySelectorAll('.observacao-input').forEach(input => {
+                input.classList.remove('active');
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollPos = sessionStorage.getItem('scrollPos');
+        if(scrollPos) {
+            window.scrollTo(0, scrollPos);
+            sessionStorage.removeItem('scrollPos');
+        }
+    });
+
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => {
+            sessionStorage.setItem('scrollPos', window.scrollY);
+        });
+    });
+</script>
+{% endblock %}
