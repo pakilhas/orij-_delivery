@@ -28,3 +28,4 @@ class ItemPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     quantidade = models.PositiveIntegerField()
+    observacao = models.TextField(blank=True, null=True)  # Adicione se necessário

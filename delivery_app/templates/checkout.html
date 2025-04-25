@@ -26,16 +26,15 @@
                         <input type="tel" name="telefone" class="form-control" required>
                     </div>
 
-                    <div class="d-flex flex-column align-items-center">
-                        <a href="/confirmacao" class="btn btn-finalizar mb-3"> <!-- Espaço abaixo -->
+                    <div class="d-grid gap-3">
+                        <!-- Botão de Submit Correto -->
+                        <button type="submit" class="btn btn-finalizar py-3">
                             Finalizar Compra <i class="fas fa-arrow-right ms-2"></i>
-                        </a>
+                        </button>
                         
-                        <a href="/carrinho" class="btn btn-outline-vermelho">
+                        <a href="{% url 'carrinho' %}" class="btn btn-outline-vermelho">
                             Voltar ao Carrinho
                         </a>
-                    </div>
-                        
                     </div>
                 </form>
             </div>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Categoria, Produto, Pedido, ItemPedido
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
 
 # Views Públicas
 def cardapio(request):
@@ -104,32 +105,60 @@ def diminuir_item(request, produto_id):
 def checkout(request):
     if request.method == 'POST':
         carrinho = request.session.get('carrinho', {})
-        pedido = Pedido.objects.create(
-            cliente_nome=request.POST.get('nome'),
-            cliente_endereco=request.POST.get('endereco'),
-            cliente_telefone=request.POST.get('telefone'),
-            total=0
-        )
         
-        total = 0
-        for produto_id, quantidade in carrinho.items():
-            produto = Produto.objects.get(id=produto_id)
-            ItemPedido.objects.create(
-                pedido=pedido,
-                produto=produto,
-                quantidade=quantidade
+        try:
+            # Cria o pedido com status padrão
+            pedido = Pedido.objects.create(
+                cliente_nome=request.POST.get('nome', 'Cliente não identificado'),  # Valor padrão
+                cliente_endereco=request.POST.get('endereco', 'Endereço não fornecido'),
+                cliente_telefone=request.POST.get('telefone', 'Telefone não fornecido'),
+                total=0,
+                status='Pendente'  # Adicione esta linha
             )
-            total += produto.preco * quantidade
-        
-        pedido.total = total
-        pedido.save()
-        request.session['carrinho'] = {}
-        return redirect('confirmacao', pedido_id=pedido.id)
+            
+            # Debug: Verifique se o pedido foi criado
+            print(f"Pedido criado - ID: {pedido.id}")
+
+            total = 0
+            for produto_id_str, item_data in carrinho.items():
+                try:
+                    produto = Produto.objects.get(id=int(produto_id_str))
+                    quantidade = item_data.get('quantidade', 1)  # Valor padrão
+                    
+                    # Cria item do pedido
+                    ItemPedido.objects.create(
+                        pedido=pedido,
+                        produto=produto,
+                        quantidade=quantidade,
+                        observacao=item_data.get('observacao', '')
+                    )
+                    
+                    total += produto.preco * quantidade
+                    
+                except Produto.DoesNotExist:
+                    print(f"Produto ID {produto_id_str} não encontrado!")
+                    continue  # Pula para o próximo item
+
+            # Atualiza o total do pedido
+            pedido.total = total
+            pedido.save()
+            
+            # Limpa o carrinho APENAS se tudo der certo
+            request.session['carrinho'] = {}
+            
+            # Debug final
+            print(f"Pedido {pedido.id} finalizado com sucesso! Total: R${total}")
+            
+            return redirect('confirmacao', pedido_id=pedido.id)
+            
+        except Exception as e:
+            print(f"ERRO GRAVE NO CHECKOUT: {str(e)}")
+            return redirect('carrinho')
     
     return render(request, 'checkout.html')
 
 def confirmacao(request, pedido_id):
-    pedido = Pedido.objects.get(id=pedido_id)
+    pedido = get_object_or_404(Pedido, id=pedido_id)  # Mostra 404 se não existir
     return render(request, 'confirmacao.html', {'pedido': pedido})
 
 # Admin
