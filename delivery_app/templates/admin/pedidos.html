@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">Painel de Pedidos</h2>
+    
+    <!-- Estatísticas Rápidas -->
+    <div class="row mb-4">
+        {% for stat in status_counts %}
+        <div class="col-md-3 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">{{ stat.status }}</h5>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-center">
+                            <div class="text-muted small">Pedidos</div>
+                            <span class="h4">{{ stat.quantidade }}</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-muted small">Total</div>
+                            <span class="h4 text-success">R$ {{ stat.valor_total|default:0|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4 shadow">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-group flex-wrap">
+                        <a href="?status=Todos" 
+                           class="btn btn-outline-secondary {% if status_filter == 'Todos' %}active{% endif %}">
+                            Todos ({{ pedidos.count }})
+                        </a>
+                        {% for value, name in pedido.STATUS_CHOICES %}
+                        <a href="?status={{ value }}" 
+                           class="btn btn-outline-secondary {% if status_filter == value %}active{% endif %}">
+                            {{ name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Status</th>
+                            <th class="text-end">Valor</th>
+                            <th>Data</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos %}
+                        <tr>
+                            <td>{{ pedido.id }}</td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <span>{{ pedido.cliente_nome }}</span>
+                                    <small class="text-muted">{{ pedido.cliente_telefone }}</small>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge {% if pedido.status == 'Pendente' %}bg-warning{% elif pedido.status == 'Em Preparo' %}bg-primary{% else %}bg-success{% endif %}">
+                                    {{ pedido.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-end">R$ {{ pedido.total|floatformat:2 }}</td>
+                            <td>{{ pedido.criado_em|date:"d/m/Y H:i" }}</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="{{ pedido.get_absolute_url }}" 
+                                       class="btn btn-sm btn-link text-dark"
+                                       data-bs-toggle="tooltip" 
+                                       title="Ver detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <form method="POST" 
+                                          action="{% url 'atualizar_status' pedido.id %}"
+                                          class="d-inline">
+                                        {% csrf_token %}
+                                        <select name="status" 
+                                                class="form-select form-select-sm"
+                                                data-bs-toggle="tooltip"
+                                                title="Alterar status"
+                                                onchange="this.form.submit()">
+                                            {% for value, name in pedido.STATUS_CHOICES %}
+                                            <option value="{{ value }}" {% if value == pedido.status %}selected{% endif %}>
+                                                {{ name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <i class="fas fa-inbox fa-2x text-muted mb-3"></i>
+                                <p class="text-muted">Nenhum pedido encontrado</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Ativa tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+})
+</script>
+{% endblock %}

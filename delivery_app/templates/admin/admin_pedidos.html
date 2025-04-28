@@ -1,47 +1,64 @@
-{% extends "admin/base_site.html" %}
-{% load static %}
+{% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Painel de Pedidos</h1>
+<div class="container mt-5">
+    <h2 class="mb-4">Pedidos</h2>
     
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Pedido #</th>
-                <th>Cliente</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pedido in pedidos %}
-            <tr>
-                <td>{{ pedido.id }}</td>
-                <td>{{ pedido.cliente_nome }}</td>
-                <td>R$ {{ pedido.total|intcomma }}</td>
-                <td>
-                    <form method="POST" action="{% url 'atualizar_status' pedido.id %}">
-                        {% csrf_token %}
-                        <select name="status" class="form-select">
-                            {% for choice in pedido.STATUS_CHOICES %}
-                            <option value="{{ choice.0 }}" {% if pedido.status == choice.0 %}selected{% endif %}>
-                                {{ choice.1 }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-primary mt-2">Atualizar</button>
-                    </form>
-                </td>
-                <td>
-                    <a href="{% url 'admin:delivery_app_pedido_change' pedido.id %}" class="btn btn-info">
-                        Detalhes
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nº Pedido</th>
+                            <th>Cliente</th>
+                            <th>Status</th>
+                            <th>Acompanhamento</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos %}
+                        <tr>
+                            <td>#{{ pedido.id }}</td>
+                            <td>{{ pedido.cliente_nome }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if pedido.status == 'Pendente' %}bg-warning
+                                    {% elif pedido.status == 'Em Preparo' %}bg-primary
+                                    {% else %}bg-success{% endif %}">
+                                    {{ pedido.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ pedido.get_absolute_url }}" 
+                                   target="_blank"
+                                   class="btn btn-sm btn-outline-dark">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <form method="post" 
+                                      action="{% url 'atualizar_status' pedido.id %}">
+                                    {% csrf_token %}
+                                    <select name="status" 
+                                            class="form-select form-select-sm"
+                                            onchange="this.form.submit()">
+                                        {% for choice in pedido.STATUS_CHOICES %}
+                                        <option value="{{ choice.0 }}" 
+                                            {% if choice.0 == pedido.status %}selected{% endif %}>
+                                            {{ choice.1 }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

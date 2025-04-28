@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Checkout - OriJá{% endblock %}
+{% block title %}Checkout - FASTER Food{% endblock %}
 
 {% block content %}
     <div class="checkout-container py-5">
@@ -9,30 +9,46 @@
         
         <div class="row justify-content-center">
             <div class="col-lg-6">
-                <form method="POST" class="checkout-form">
+                <form method="POST" class="checkout-form" novalidate>
                     {% csrf_token %}
+                    
                     <div class="mb-4">
                         <label class="form-label">Nome Completo</label>
-                        <input type="text" name="nome" class="form-control" required>
+                        <input type="text" name="nome" class="form-control" 
+                               value="{{ request.POST.nome }}" required>
                     </div>
                     
                     <div class="mb-4">
-                        <label class="form-label">Endereço de Entrega</label>
-                        <textarea name="endereco" class="form-control" rows="3" required></textarea>
+                        <label class="form-label">Endereço Completo</label>
+                        <textarea name="endereco" class="form-control" rows="3" 
+                                  required>{{ request.POST.endereco }}</textarea>
                     </div>
                     
                     <div class="mb-4">
-                        <label class="form-label">Telefone</label>
-                        <input type="tel" name="telefone" class="form-control" required>
+                        <label class="form-label">WhatsApp</label>
+                        <input type="tel" name="telefone" class="form-control" 
+                               pattern="[0-9]{11}" 
+                               title="Digite o DDD + número (ex: 11999999999)"
+                               value="{{ request.POST.telefone }}" 
+                               required>
+                        <small class="form-text text-muted">
+                            Exemplo: 11999999999 (apenas números)
+                        </small>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Você receberá um link de acompanhamento via WhatsApp
                     </div>
 
                     <div class="d-grid gap-3">
-                        <!-- Botão de Submit Correto -->
                         <button type="submit" class="btn btn-finalizar py-3">
-                            Finalizar Compra <i class="fas fa-arrow-right ms-2"></i>
+                            <i class="fas fa-check-circle me-2"></i>
+                            Confirmar Pedido
                         </button>
                         
                         <a href="{% url 'carrinho' %}" class="btn btn-outline-vermelho">
+                            <i class="fas fa-arrow-left me-2"></i>
                             Voltar ao Carrinho
                         </a>
                     </div>

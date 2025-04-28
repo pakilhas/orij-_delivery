@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Acompanhar Pedido - FASTER Food{% endblock %}
+
+{% block content %}
+<div class="container acompanhamento-pedido py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-vermelho text-white">
+                    <h2 class="mb-0"><i class="fas fa-truck-fast me-2"></i>Acompanhe seu Pedido</h2>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Status do Pedido -->
+                    <div class="status-pedido mb-5 text-center">
+                        <div class="d-flex justify-content-center mb-3">
+                            {% if pedido.status == 'Pendente' %}
+                            <span class="badge bg-warning fs-5"><i class="fas fa-clock me-2"></i>{{ pedido.status }}</span>
+                            {% elif pedido.status == 'Em Preparo' %}
+                            <span class="badge bg-primary fs-5"><i class="fas fa-blender me-2"></i>{{ pedido.status }}</span>
+                            {% else %}
+                            <span class="badge bg-success fs-5"><i class="fas fa-check-circle me-2"></i>{{ pedido.status }}</span>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">Atualizado em: {{ pedido.criado_em|date:"d/m/Y H:i" }}</small>
+                    </div>
+
+                    <!-- Detalhes do Pedido -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="mb-3"><i class="fas fa-user me-2"></i>Dados do Cliente</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Nome:</strong> {{ pedido.cliente_nome }}</li>
+                                <li><strong>Endereço:</strong> {{ pedido.cliente_endereco }}</li>
+                                <li><strong>Telefone:</strong> {{ pedido.cliente_telefone }}</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="mb-3"><i class="fas fa-receipt me-2"></i>Detalhes do Pedido</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Nº Pedido:</strong> #{{ pedido.id }}</li>
+                                <li><strong>Data:</strong> {{ pedido.criado_em|date:"d/m/Y H:i" }}</li>
+                                <li><strong>Total:</strong> R$ {{ pedido.total|floatformat:2 }}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Itens do Pedido -->
+                    <h5 class="mb-3"><i class="fas fa-list-ul me-2"></i>Itens do Pedido</h5>
+                    <div class="table-responsive mb-4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantidade</th>
+                                    <th>Preço Unitário</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in pedido.itempedido_set.all %}
+                                <tr>
+                                    <td>{{ item.produto.nome }}</td>
+                                    <td>{{ item.quantidade }}</td>
+                                    <td>R$ {{ item.produto.preco|floatformat:2 }}</td>
+                                    <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a href="{{ pedido.get_absolute_url }}" class="btn btn-vermelho">
+                            <i class="fas fa-sync me-2"></i>Atualizar Status
+                        </a>
+                        <a href="https://wa.me/55{{ pedido.cliente_telefone }}" 
+                           class="btn btn-success" 
+                           target="_blank">
+                            <i class="fab fa-whatsapp me-2"></i>Falar no WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .acompanhamento-pedido {
+        min-height: 70vh;
+    }
+    .badge {
+        padding: 0.75em 1.25em;
+        border-radius: 2em;
+    }
+    .table {
+        border: 1px solid #dee2e6;
+    }
+    .table thead th {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}

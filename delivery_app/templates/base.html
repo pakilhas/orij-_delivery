@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}OriJá{% endblock %}</title>
+    <title>{% block title %}FASTER Food{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -27,31 +27,46 @@
                             <a class="nav-link {% if request.resolver_match.url_name == 'cardapio' %}active{% endif %}" 
                                href="{% url 'cardapio' %}">Cardápio</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'promocoes' %}active{% endif %}" 
-                               href="#promocoes">Promoções</a>
-                        </li>
+                        <!-- Removi o link de promoções não implementado -->
                         <li class="nav-item">
                             <a class="nav-link {% if request.resolver_match.url_name == 'carrinho' %}active{% endif %}" 
                                href="{% url 'carrinho' %}">
                                 <i class="fas fa-shopping-cart"></i>
                                 <span class="badge badge-carrinho bg-danger">
-                                    {% if request.session.carrinho %}
-                                        {{ request.session.carrinho|length }}
-                                    {% else %}
-                                        0
-                                    {% endif %}
+                                    {% with carrinho=request.session.carrinho %}
+                                        {{ carrinho.values|length|default:0 }}
+                                    {% endwith %}
                                 </span>
                             </a>
                         </li>
+                        <!-- Link para área admin se usuário for staff -->
+                        {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin_pedidos' %}">
+                                <i class="fas fa-user-shield"></i> Admin
+                            </a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
+    <!-- Alertas -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <!-- Conteúdo Principal -->
-    <main class="container">
+    <main class="container my-5">
         {% block content %}{% endblock %}
     </main>
 
@@ -62,11 +77,11 @@
                 <div class="col-md-4 mb-4">
                     <h5>Contato</h5>
                     <p><i class="fas fa-phone"></i> (11) 9999-9999</p>
-                    <p><i class="fas fa-envelope"></i> contato@orija.com</p>
+                    <p><i class="fas fa-envelope"></i> contato@fasterfood.com</p>
                 </div>
                 
                 <div class="col-md-4 mb-4">
-                    <h5>Horário de Funcionamento</h5>
+                    <h5>Horário</h5>
                     <p>Ter-Dom: 18h - 23h</p>
                     <p>Delivery: 18h - 22h</p>
                 </div>
@@ -74,15 +89,15 @@
                 <div class="col-md-4 mb-4">
                     <h5>Redes Sociais</h5>
                     <div class="social-icons">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/fasterfood" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/5511999999999" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/fasterfood" target="_blank"><i class="fab fa-facebook"></i></a>
                     </div>
                 </div>
             </div>
             
             <div class="text-center pt-4 border-top">
-                <p>© {% now "Y" %} OriJá - Todos os direitos reservados</p>
+                <p>© {% now "Y" %} FASTER Food - Todos os direitos reservados</p>
             </div>
         </div>
     </footer>

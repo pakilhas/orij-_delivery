@@ -320,3 +320,73 @@ main {
     padding: 0.8rem 2rem;
     border-radius: 50px;
 }
+
+/* Validação de Campos */
+input:invalid, textarea:invalid {
+    border-color: #dc3545 !important;
+}
+
+input:valid, textarea:valid {
+    border-color: #198754 !important;
+}
+
+.btn-finalizar {
+    background-color: #dc3545;
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-finalizar:hover {
+    background-color: #bb2d3b;
+    color: white;
+}
+
+/* Cores Personalizadas */
+.bg-vermelho {
+    background-color: #dc3545 !important;
+}
+
+.btn-vermelho {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-vermelho:hover {
+    background-color: #bb2d3b;
+    color: white;
+}
+
+/* Ajustes de Tabela */
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Estilos para o Painel Admin */
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107!important;
+}
+
+.badge.bg-primary {
+    background-color: #0d6efd!important;
+}
+
+.badge.bg-success {
+    background-color: #198754!important;
+}
+
+.form-select-sm {
+    width: 150px;
+    transition: all 0.3s;
+}
+
+.form-select-sm:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+}

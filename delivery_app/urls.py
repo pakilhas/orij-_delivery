@@ -7,6 +7,7 @@ urlpatterns = [
     path('carrinho/', views.carrinho, name='carrinho'),
     path('checkout/', views.checkout, name='checkout'),
     path('confirmacao/<int:pedido_id>/', views.confirmacao, name='confirmacao'),
+    path('pedido/<uuid:token>/', views.acompanhar_pedido, name='acompanhar_pedido'),
     
     # Operações do Carrinho
     path('adicionar/<int:produto_id>/', views.adicionar_ao_carrinho, name='adicionar_ao_carrinho'),
@@ -17,4 +18,9 @@ urlpatterns = [
     # Admin
     path('admin/pedidos/', views.admin_pedidos, name='admin_pedidos'),
     path('admin/atualizar-status/<int:pedido_id>/', views.atualizar_status, name='atualizar_status'),
+
+    #gerenciamento/pedidos
+    path('gerenciamento/pedidos/', views.admin_pedidos, name='admin_pedidos'),
+    path('gerenciamento/atualizar-status/<int:pedido_id>/', views.atualizar_status, name='atualizar_status'),
+
 ]
